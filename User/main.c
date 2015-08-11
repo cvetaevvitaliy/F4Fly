@@ -15,6 +15,13 @@
 #include "./TASK/task_PX4FLOW.h"
 #include "./TASK/task_Oled.h"
 #include "./TASK/task_led.h"
+
+#if 1==VERSIONSBY
+#error 1
+#elif 2==VERSIONSBY
+#error 2
+#endif
+
 void SYS_INIT(void)
 {
 

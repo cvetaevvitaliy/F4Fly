@@ -14,7 +14,7 @@
         <TargetCommonOption>
           <Device>STM32F407VETx</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32F4xx_DFP.2.3.0</PackID>
+          <PackID>Keil.STM32F4xx_DFP.2.4.0</PackID>
           <PackURL>http://www.keil.com/pack</PackURL>
           <Cpu>IROM(0x08000000,0x80000) IRAM(0x20000000,0x20000) IRAM2(0x10000000,0x10000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -145,7 +145,6 @@
             <RestoreToolbox>1</RestoreToolbox>
             <RestoreTracepoints>0</RestoreTracepoints>
             <RestoreSysVw>1</RestoreSysVw>
-            <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
           <TargetSelection>6</TargetSelection>
@@ -364,7 +363,7 @@
             <useXO>0</useXO>
             <VariousControls>
               <MiscControls>--c99</MiscControls>
-              <Define>STM32F4XX, USE_STDPERIPH_DRIVER</Define>
+              <Define>STM32F4XX, USE_STDPERIPH_DRIVER,VERSIONSBY=2</Define>
               <Undefine></Undefine>
               <IncludePath>..\User;..\Libraries\STM32F4xx_StdPeriph_Driver\inc;..\Libraries\CMSIS\Include;..\Libraries\CMSIS\Device\ST\STM32F4xx\Include;..\User\Dirver;..\GLIB\SYSTEM;..\User\TASK;..\GLIB\HARDWARE;..\User\CONFIG;..\User\APP;..\GLIB\PERIPHERAL\PX4FLOW;..\GLIB\HARDWARE;..\User;..\GLIB\PERIPHERAL\OLED</IncludePath>
             </VariousControls>

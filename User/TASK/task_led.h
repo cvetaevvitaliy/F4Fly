@@ -1,6 +1,8 @@
 #ifdef __cplusplus
        extern "C" {
 #endif
+#include "gpio.h"
+#include "sys_os.h"
 #define digitalToggle(p,i)		{p->ODR ^=i;}			//Êä³ö·´×ª×´Ì¬
 #define LED1_Toggle   digitalToggle(GPIOE,GPIO_Pin_3|GPIO_Pin_5)
 #define LED1_H        GPIO_SetBits(GPIOE,GPIO_Pin_3|GPIO_Pin_5);
