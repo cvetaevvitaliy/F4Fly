@@ -1,0 +1,29 @@
+遥控器捕获：
+PD12  PD13  PB0  PB1  PB4  PB5
+VCC   VCC   VCC  VCC  VCC  VCC
+GND   GND   GND  GND  GND  GND
+ 5     0     3    4    
+ROLL  PIT   THR  YAW
+
+串口：
+PA2，PA3   (串口2)
+PA9，PA10 （串口1）
+
+超声波：
+PA8，PA11
+
+PWM:
+PC6，PA1，PC7，PA0
+
+MPU6050：
+PB6(SCL)，PB7(SDA) (I2C1)
+
+灯：
+PA2
+
+SPI接口：
+PA5，PA6，PA7 (SPI1)
+PB13，PB14，PB15 (SPI2)
+
+AD采样：
+PC4,PC5

@@ -12,12 +12,12 @@ int task_pwm_ex(void)
     TIM2_PWM_Init(5000, 42);
     TIM8_PWM_Init(5000, 84);
 	
-//	  TIM_SetCompare2(TIM8, 4000);
+//    TIM_SetCompare2(TIM8, 4000);
 //    TIM_SetCompare1(TIM2, 4000);
 //    TIM_SetCompare2(TIM2, 4000);
 //    TIM_SetCompare1(TIM8, 4000);
 
-//	  delay_ms(1500);
+//	  delay_ms(2000);
 	  TIM_SetCompare1(TIM2, 2300);
     TIM_SetCompare2(TIM2, 2300);
     TIM_SetCompare1(TIM8, 2300);

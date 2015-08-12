@@ -19,7 +19,7 @@
 #if 1==VERSIONSBY
 #error 1
 #elif 2==VERSIONSBY
-#error 2
+//#error 2
 #endif
 
 void SYS_INIT(void)
@@ -49,6 +49,6 @@ int main(void)
 		 RunTaskA(task_PX4FLOW,3);
 		 RunTaskA(task_cap_rc, 4);
 		 RunTaskA(task_Oled, 5);
+		 RunTaskA(task_led, 5);	 
 	 }
-
 }

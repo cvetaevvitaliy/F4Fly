@@ -4,9 +4,10 @@
 #include "gpio.h"
 #include "sys_os.h"
 #define digitalToggle(p,i)		{p->ODR ^=i;}			//Êä³ö·´×ª×´Ì¬
-#define LED1_Toggle   digitalToggle(GPIOE,GPIO_Pin_3|GPIO_Pin_5)
-#define LED1_H        GPIO_SetBits(GPIOE,GPIO_Pin_3|GPIO_Pin_5);
-#define LED1_L        GPIO_ResetBits(GPIOE,GPIO_Pin_3|GPIO_Pin_5); 
+
+#define LED1_Toggle   digitalToggle(GPIOA,GPIO_Pin_2)
+#define LED1_H        GPIO_SetBits(GPIOA,GPIO_Pin_2);
+#define LED1_L        GPIO_ResetBits(GPIOA,GPIO_Pin_2); 
 
 void LED_Init(void)
 {
@@ -33,20 +34,20 @@ int task_led(void)
     while (1)
     {
 			WaitX(100);
-        if (RC_Control.ARMED)
-        {
-            if (RC_Control.ALT_ON_OFF)
-            {
-                WaitX(50);
-                LED1_Toggle;
-            }
-            else
-            {
-                WaitX(100);
-                LED1_H;
-            }
-        }
-        else
+//        if (RC_Control.ARMED)
+//        {
+//            if (RC_Control.ALT_ON_OFF)
+//            {
+//                WaitX(50);
+//                LED1_Toggle;
+//            }
+//            else
+//            {
+//                WaitX(100);
+//                LED1_H;
+//            }
+//        }
+//        else
         {
             WaitX(200);
             LED1_Toggle;
