@@ -41,7 +41,7 @@ if(GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_11)==1)
 		TIM_Cmd(TIM1, ENABLE);											//					 //开始计时，计时时间
 		while(GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_11)==1);		 //	高电平持续
 		TIM_Cmd(TIM1, DISABLE);		 //					关闭时钟
-   Ultrasonic=(int)((180*pow(10.0,-6)*((float)TIM_GetCounter(TIM1)/2.0))*1000);
+    Ultrasonic=(int)((180*pow(10.0,-6)*((double)TIM_GetCounter(TIM1)/2.0))*1000);
 		TIM_SetCounter(TIM1,0x00);	
 Alt_temp=Ultrasonic-mid[0];
 if(Ultrasonic!=0&&Alt_temp<200&&Alt_temp>-200)

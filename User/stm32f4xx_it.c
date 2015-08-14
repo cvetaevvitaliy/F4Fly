@@ -88,8 +88,9 @@ void USART3_IRQHandler(void)  //??????
 //}
 
 
+extern void TIM1_Cap_IRQ(void);
 extern void TIM3_Cap_IRQ(void);
-//extern void TIM4_Cap_IRQ(void);
+extern void TIM4_Cap_IRQ(void);
 extern void TIM8_Cap_IRQ(void);
 
 
@@ -122,10 +123,10 @@ void TIM3_IRQHandler(void)
 {
     TIM3_Cap_IRQ();
 }
-//void TIM4_IRQHandler(void)
-//{
-//    TIM4_Cap_IRQ();
-//}
+void TIM4_IRQHandler(void)
+{
+    TIM4_Cap_IRQ();
+}
 void TIM1_IRQHandler(void)
 {
     TIM1_Cap_IRQ();
