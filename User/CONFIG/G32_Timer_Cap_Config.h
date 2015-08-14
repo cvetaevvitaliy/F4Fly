@@ -101,11 +101,11 @@ TIM1_CH3N    |PB15(!36)|   PB1   |   PE12(100 144)   |
 #define CAP_TIM5_CH4  0
 #define CAP_TIM5_AFIO 0
 
-#define CAP_TIM1_CH1  1
-#define CAP_TIM1_CH2  1
+#define CAP_TIM1_CH1  0
+#define CAP_TIM1_CH2  0
 #define CAP_TIM1_CH3  0
-#define CAP_TIM1_CH4  0
-#define CAP_TIM1_AFIO 0
+#define CAP_TIM1_CH4  1
+#define CAP_TIM1_AFIO 1
 
 #define CAP_TIM8_CH1  0
 #define CAP_TIM8_CH2  0

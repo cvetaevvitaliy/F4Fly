@@ -83,8 +83,8 @@ void Prepare_Data2(T_float_angle *angle_in)
 
 
 ////////////////////////////////////////////////////////////////////////////////
-#define Kp 0.2f                        // proportional gain governs rate of convergence to accelerometer/magnetometer
-#define Ki 0.00001f                          // integral gain governs rate of convergence of gyroscope biases
+#define Kp 0.4f                        // proportional gain governs rate of convergence to accelerometer/magnetometer
+#define Ki 0.0f                          // integral gain governs rate of convergence of gyroscope biases
 #define halfT 0.001f                   // half the sample period???????
 
 float q0 = 1, q1 = 0, q2 = 0, q3 = 0; // quaternion elements representing the estimated orientation
@@ -163,8 +163,8 @@ void IMUupdate(S_INT16_XYZ *gyr, S_INT16_XYZ *acc, T_float_angle *angle)
 	    static float Yaw_I = 0;
 		Yaw_I = MPU6050_GYRO_LAST.z*Gyro_G*0.01;
 	  angle->yaw =angle->yaw + Yaw_I;// (0.99) * (angle->yaw + Yaw_I) + (0.01) * (compass_yaw);
-    angle->pit = asin(-2 * q1 * q3 + 2 * q0 * q2) * 57.2957795f+1.20; // pitch
-    angle->rol = -atan2(2 * q2 * q3 + 2 * q0 * q1, -2 * q1 * q1 - 2 * q2 * q2 + 1) * 57.2957795f-1.04; // roll
+    angle->pit = asin(-2 * q1 * q3 + 2 * q0 * q2) * 57.2957795f; // pitch
+    angle->rol = -atan2(2 * q2 * q3 + 2 * q0 * q1, -2 * q1 * q1 - 2 * q2 * q2 + 1) * 57.2957795f; // roll
 //  Sys_Printf(Printf_USART, "m_x:%lf   ,%lf   ,%lf   \n",angle->pit,angle->rol,angle->yaw);//ËÙ¶È
 
 }

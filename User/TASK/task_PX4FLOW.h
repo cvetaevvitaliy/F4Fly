@@ -13,7 +13,7 @@ int task_PX4FLOW(void)
 
     _SS
 
-	delay_ms(2000);
+	   delay_ms(2000);
      while (1)
    { 
 		 WaitX(2);		

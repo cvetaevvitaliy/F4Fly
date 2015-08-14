@@ -8,17 +8,17 @@ T_Control RC_Control;
 
 void Rc_DataAnl(u16 Rc_Pwm_In[5])
 {
- #if 1==THROTTLE_INVERTED
- Rc_Data.THROTTLE        =   3000-Rc_Pwm_In[3];
- //#error
- #elif 0==THROTTLE_INVERTED
- Rc_Data.THROTTLE        =   Rc_Pwm_In[3]-200;
- #endif
-    Rc_Data.YAW             =   Rc_Pwm_In[4]-200;
-    Rc_Data.ROLL            =   Rc_Pwm_In[5]-200;
-    Rc_Data.PITCH           =   Rc_Pwm_In[0]-200;
-    Rc_Data.AUX1            =   Rc_Pwm_In[2]-200;
-    Rc_Data.AUX2            =   Rc_Pwm_In[1]-200;
+#if 1==THROTTLE_INVERTED
+    Rc_Data.THROTTLE        =   3000 - Rc_Pwm_In[3];
+//#error
+#elif 0==THROTTLE_INVERTED
+    Rc_Data.THROTTLE        =   Rc_Pwm_In[3] - 200;
+#endif
+    Rc_Data.YAW             =   Rc_Pwm_In[4] - 200;
+    Rc_Data.ROLL            =   Rc_Pwm_In[5] - 200;
+    Rc_Data.PITCH           =   Rc_Pwm_In[0] - 200;
+    Rc_Data.AUX1            =   Rc_Pwm_In[2] - 200;
+    Rc_Data.AUX2            =   Rc_Pwm_In[1] - 200;
     Rc_Data.AUX3            =   Rc_Pwm_In[2];
     Rc_Data.AUX4            =   Rc_Pwm_In[2];
     Rc_Data.AUX5            =   Rc_Pwm_In[2];//?
@@ -62,54 +62,54 @@ void RC_Analyse(T_RC_Data *rc_data, T_Control *ctl_data)
         else
             fun_cnt = 0;
     }//??
-//    {
-//        //???
-//        //?????????
-//        static u16 fun_cnt2 = 0;
-//        if (rc_data->AUX1 > 1500 && (0 == ctl_data->ALT_ON_OFF))
-//        {
-//            if (fun_cnt2 < RC_FUN_CNT)
-//                fun_cnt2++;
-//            else
-//            {
-//                fun_cnt2 = 0;
-//                ctl_data->ALT_ON_OFF = 1;
-//                //Alt_Set = (rc_data->AUX2 - 1000) * 2;
-//            }
-//        }
-//        else if (rc_data->AUX1 < 1500 && ctl_data->ALT_ON_OFF)
-//        {
-//            if (fun_cnt2 < RC_FUN_CNT)
-//                fun_cnt2++;
-//            else
-//            {
-//                fun_cnt2 = 0;
-//                ctl_data->ALT_ON_OFF = 0;
-//            }
-//        }
-//        else
-//        {
-//            fun_cnt2 = 0;
-//        }
-//    }
-//    {
-//        //??flash
-//        //           throrrle min
-//        //           yaw      max
-//        //           roll     min
-//        //           pit      min
-//        static u16 fun_cnt3 = 0;
-//        if (rc_data->THROTTLE < RC_FUN_MIN && rc_data->YAW < RC_FUN_MIN && \
-//                rc_data->ROLL < RC_FUN_MIN && rc_data->PITCH < RC_FUN_MIN&&\
-//								fun_cnt3!=(RC_FUN_CNT+10))
-//            if (fun_cnt3 < RC_FUN_CNT)
-//                fun_cnt3++;
-//            else
-//            {
-//                fun_cnt3 = (RC_FUN_CNT+10);
-////                StmFlash_Save();
-//            }
-//        else
-//            fun_cnt3 = 0;
-//    }
+//     {
+//         //???
+//         //?????????
+//         static u16 fun_cnt2 = 0;
+//         if (rc_data->AUX1 > 1500 && (0 == ctl_data->ALT_ON_OFF))
+//         {
+//             if (fun_cnt2 < RC_FUN_CNT)
+//                 fun_cnt2++;
+//             else
+//             {
+//                 fun_cnt2 = 0;
+//                 ctl_data->ALT_ON_OFF = 1;
+//                 //Alt_Set = (rc_data->AUX2 - 1000) * 2;
+//             }
+//         }
+//         else if (rc_data->AUX1 < 1500 && ctl_data->ALT_ON_OFF)
+//         {
+//             if (fun_cnt2 < RC_FUN_CNT)
+//                 fun_cnt2++;
+//             else
+//             {
+//                 fun_cnt2 = 0;
+//                 ctl_data->ALT_ON_OFF = 0;
+//             }
+//         }
+//         else
+//         {
+//             fun_cnt2 = 0;
+//         }
+//     }
+//     {
+//         //??flash
+//         //           throrrle min
+//         //           yaw      max
+//         //           roll     min
+//         //           pit      min
+//         static u16 fun_cnt3 = 0;
+//         if (rc_data->THROTTLE < RC_FUN_MIN && rc_data->YAW < RC_FUN_MIN && \
+//                 rc_data->ROLL < RC_FUN_MIN && rc_data->PITCH < RC_FUN_MIN&&\
+//                              fun_cnt3!=(RC_FUN_CNT+10))
+//             if (fun_cnt3 < RC_FUN_CNT)
+//                 fun_cnt3++;
+//             else
+//             {
+//                 fun_cnt3 = (RC_FUN_CNT+10);
+// //                StmFlash_Save();
+//             }
+//         else
+//             fun_cnt3 = 0;
+//     }
 }

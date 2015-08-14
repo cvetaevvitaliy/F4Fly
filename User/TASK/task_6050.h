@@ -27,9 +27,7 @@ int task_6050(void)
         Acc.z = MPU6050_ACC_LAST.z;
         Gyr.x = MPU6050_GYRO_LAST.x;
         Gyr.y = MPU6050_GYRO_LAST.y;
-        Gyr.z = MPU6050_GYRO_LAST.z;
-//Sys_Printf(Printf_USART, "m_x:%d,%d,%d\n",Acc.x,Acc.y,Acc.z);//ËÙ¶È
-
+        Gyr.z = MPU6050_GYRO_LAST.z;//低通防止静态误差
 
         Prepare_Data(&Acc, &Average_Acc);//滤波4us
         flag_ACC = 1;

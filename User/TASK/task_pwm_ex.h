@@ -11,17 +11,23 @@ int task_pwm_ex(void)
     Ex_Init();
     TIM2_PWM_Init(5000, 42);
     TIM8_PWM_Init(5000, 84);
+	  TIM4_PWM_Init(2000, 840);
 	
-//    TIM_SetCompare2(TIM8, 4000);
-//    TIM_SetCompare1(TIM2, 4000);
-//    TIM_SetCompare2(TIM2, 4000);
-//    TIM_SetCompare1(TIM8, 4000);
+//	  TIM_SetCompare2(TIM8, 3720);//C7
+//    TIM_SetCompare1(TIM2, 4000);//A0
+//    TIM_SetCompare2(TIM2, 3720);//A1
+//    TIM_SetCompare1(TIM8, 3720);//C6
 
-//	  delay_ms(2000);
+//	  delay_ms(1500);
 	  TIM_SetCompare1(TIM2, 2300);
     TIM_SetCompare2(TIM2, 2300);
     TIM_SetCompare1(TIM8, 2300);
     TIM_SetCompare2(TIM8, 2300);
+	
+		TIM_SetCompare1(TIM4, 162);
+    TIM_SetCompare2(TIM4, 150);
+	  TIM_SetCompare3(TIM4, 150);
+    TIM_SetCompare4(TIM4, 150);
 //#define PWM_SetCompare1(x)  TIM_SetCompare2(TIM8, (x));
 //#define PWM_SetCompare2(x)  TIM_SetCompare1(TIM2, (x));
 //#define PWM_SetCompare3(x)  TIM_SetCompare2(TIM2, (x));

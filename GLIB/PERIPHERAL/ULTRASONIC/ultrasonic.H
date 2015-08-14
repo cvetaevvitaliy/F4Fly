@@ -4,7 +4,7 @@
 #include "stm32_config.h"
 #include "G32_timer_cap.h"
 #include "Ultrasonic_Config.h"
-#include "stm32f10x.h"
+#include "stm32f4xx.h"
 #include <stdio.h>
 
 

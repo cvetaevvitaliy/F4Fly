@@ -364,6 +364,71 @@ void TIM4_Cap_IRQ(void)
 #undef TIMx
 }
 #endif
+#if (CAP_TIM1_CH4)
+void TIM1_Cap_Init(u16 arr, u16 psc)
+{
+    GPIO_InitTypeDef GPIO_InitStructure;
+	  TIM_ICInitTypeDef  TIM_ICInitStructure;
+    TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
+    NVIC_InitTypeDef NVIC_InitStructure;
+	
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE);
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);  //使能GPIO外设和AFIO复用功能模块时钟
 
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+		GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+    GPIO_Init(GPIOA, &GPIO_InitStructure);            //初始化GPIO
+
+	  GPIO_PinAFConfig(GPIOA, GPIO_PinSource11, GPIO_AF_TIM1);
+//初始化TIM4
+    TIM_TimeBaseStructure.TIM_Period = arr - 1;    //设置在下一个更新事件装入活动的自动重装载寄存器周期的值
+    TIM_TimeBaseStructure.TIM_Prescaler = psc - 1; //设置用来作为TIMx时钟频率除数的预分频值
+    TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;   //设置时钟分割:TDTS = Tck_tim
+    TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  //TIM计数模式
+    TIM_TimeBaseInit(TIM1, &TIM_TimeBaseStructure);//根据TIM_TimeBaseInitStruct中指定的参数初始化TIMx的时间基数单位
+
+    //中断分组初始化
+    NVIC_InitStructure.NVIC_IRQChannel = TIM1_CC_IRQn;                     //TIM3中断
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;      //先占优先级2级
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;              //从优先级0级
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;                     //IRQ通道被使能
+    NVIC_Init(&NVIC_InitStructure); //根据NVIC_InitStruct中指定的参数初始化外设NVIC寄存器
+    TIM_ITConfig(TIM1, TIM_IT_Update, ENABLE);     //允许更新中断 ,允许CC1IE捕获中断
+
+    //初始化TIM输入捕获参数
+    TIM_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;    //上升沿捕获
+    TIM_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI; //映射到TI1上
+    TIM_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;   //配置输入分频,不分频
+    TIM_ICInitStructure.TIM_ICFilter = USER_CAP_FILTER;//IC1F=0000 配置输入滤波器 不滤波
+
+
+    TIM_ICInitStructure.TIM_Channel = TIM_Channel_4;
+    TIM_ICInit(TIM1, &TIM_ICInitStructure);
+    TIM_ITConfig(TIM1, TIM_IT_CC4, ENABLE);     //允许更新中断 ,允许CC1IE捕获中断
+
+    TIM_Cmd(TIM1, ENABLE);//使能TIM1
+}
+void TIM1_Cap_IRQ(void)
+{
+#define TIMx TIM1
+#if CAP_TIM4_CH1
+    DEFTIM_CAP_CH(4, 1)
+		#endif
+#if CAP_TIM4_CH2
+    DEFTIM_CAP_CH(4, 2)
+		#endif
+#if CAP_TIM4_CH3
+    DEFTIM_CAP_CH(4, 3)
+		#endif
+#if CAP_TIM4_CH4
+    DEFTIM_CAP_CH(4, 4)
+#endif
+    TIM_ClearITPendingBit(TIMx, TIM_IT_CC1 | TIM_IT_CC2 | TIM_IT_CC3 | TIM_IT_CC4 | TIM_IT_Update); //清除中断标志位
+#undef TIMx
+}
+#endif
 
 

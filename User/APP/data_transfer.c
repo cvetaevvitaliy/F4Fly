@@ -92,27 +92,28 @@ void Ex_Init(void)
 //	PID_YAW.P = 1;
 //	PID_YAW.I = 0;
 //	PID_YAW.D = 0.08;
-	PID_ROL.P = 200;
+	PID_ROL.P = 100;
 	PID_ROL.I = 0;
 	PID_ROL.D = 0;
 	
-	PID_PIT.P = 200;
+	PID_PIT.P = 100;
 	PID_PIT.I = 0;
 	PID_PIT.D = 0;
 	
-	PID_YAW.P = 8;
-	PID_YAW.I = 0;
-	PID_YAW.D = 0.4;
+	PID_YAW.P = 4;
+	PID_YAW.I = 0.01;
+	PID_YAW.D = 0.6;
 	
 
     PID_ALT.P = 0.1;
-    PID_ALT.I = 0.01;
+    PID_ALT.I = 0.015;
     PID_ALT.D = 0.2;
+
 
     *ex_on_off = 255;
     *yaw_just = 10;
-    *rol_just = 13;
-    *pit_just = 12;
+    *rol_just = 10;
+    *pit_just = 10;
 }
 void Ex_Anl(void)
 {
@@ -324,6 +325,7 @@ extern float rol_i;
 void Data_Send_Senser(void)
 {
     u8 _cnt = 0;
+	  Mag.z=PID_ALT.dout;
     data_to_send[_cnt++] = 0xAA;
     data_to_send[_cnt++] = 0xAA;
     data_to_send[_cnt++] = 0x02;

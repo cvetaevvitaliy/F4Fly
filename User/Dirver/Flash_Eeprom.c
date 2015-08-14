@@ -26,75 +26,75 @@ static u32 read_int(u32 start_addr, u16 cnt);
 
 u8 Data_Save(void)
 {	
-//	u8 act_page_num = 255;	//ø…“‘ π”√µƒ“≥¬Î
-//	u32 act_page_start = 0;	//∏√“≥∆ ºµÿ÷∑
-//	
-//	act_page_num = get_act_page();
-//	if(act_page_num>(PAGE_NUM-2))
-//	{
-//		if(clear_flash(FLASH_Sector_11))
-//			act_page_num = 0;
-//		else
-//			return 0;	//≤¡≥˝ ß∞‹
-//	}
-//	
-//	act_page_start = FLASH_USER_START_ADDR + (act_page_num * PAGE_BYTES);
-//	FLASH_Unlock();
-//	
-//	if(FLASH_ProgramWord(act_page_start, 0x12345678) == FLASH_COMPLETE);
-//  else
-//		return 0;	//–¥»Î ß∞‹
-//	
-//	u16 data_cnt = 1;
-//	if(!write_float(act_page_start, data_cnt++, PID_ROL.P) == FLASH_COMPLETE) return 0;	//–¥»Î ß∞‹
-//	if(!write_float(act_page_start, data_cnt++, PID_ROL.I) == FLASH_COMPLETE) return 0;	//–¥»Î ß∞‹
-//	if(!write_float(act_page_start, data_cnt++, PID_ROL.D) == FLASH_COMPLETE) return 0;	//–¥»Î ß∞‹
-//	if(!write_float(act_page_start, data_cnt++, PID_PIT.P) == FLASH_COMPLETE) return 0;	//–¥»Î ß∞‹
-//	if(!write_float(act_page_start, data_cnt++, PID_PIT.I) == FLASH_COMPLETE) return 0;	//–¥»Î ß∞‹
-//	if(!write_float(act_page_start, data_cnt++, PID_PIT.D) == FLASH_COMPLETE) return 0;	//–¥»Î ß∞‹
-//	if(!write_float(act_page_start, data_cnt++, PID_YAW.P) == FLASH_COMPLETE) return 0;	//–¥»Î ß∞‹
-//	if(!write_float(act_page_start, data_cnt++, PID_YAW.I) == FLASH_COMPLETE) return 0;	//–¥»Î ß∞‹
-//	if(!write_float(act_page_start, data_cnt++, PID_YAW.D) == FLASH_COMPLETE) return 0;	//–¥»Î ß∞‹
-//	if(!write_int(act_page_start, data_cnt++, GYRO_OFFSET.x) == FLASH_COMPLETE) return 0;	//–¥»Î ß∞‹
-//	if(!write_int(act_page_start, data_cnt++, GYRO_OFFSET.y) == FLASH_COMPLETE) return 0;	//–¥»Î ß∞‹
-//	if(!write_int(act_page_start, data_cnt++, GYRO_OFFSET.z) == FLASH_COMPLETE) return 0;	//–¥»Î ß∞‹
-//	if(!write_int(act_page_start, data_cnt++, ACC_OFFSET.x) == FLASH_COMPLETE) return 0;	//–¥»Î ß∞‹
-//	if(!write_int(act_page_start, data_cnt++, ACC_OFFSET.y) == FLASH_COMPLETE) return 0;	//–¥»Î ß∞‹
-//	if(!write_int(act_page_start, data_cnt++, ACC_OFFSET.z) == FLASH_COMPLETE) return 0;	//–¥»Î ß∞‹
-//	
-//	FLASH_Lock(); 
+	u8 act_page_num = 255;	//ø…“‘ π”√µƒ“≥¬Î
+	u32 act_page_start = 0;	//∏√“≥∆ ºµÿ÷∑
+	
+	act_page_num = get_act_page();
+	if(act_page_num>(PAGE_NUM-2))
+	{
+		if(clear_flash(FLASH_Sector_11))
+			act_page_num = 0;
+		else
+			return 0;	//≤¡≥˝ ß∞‹
+	}
+	
+	act_page_start = FLASH_USER_START_ADDR + (act_page_num * PAGE_BYTES);
+	FLASH_Unlock();
+	
+	if(FLASH_ProgramWord(act_page_start, 0x12345678) == FLASH_COMPLETE);
+  else
+		return 0;	//–¥»Î ß∞‹
+	
+	u16 data_cnt = 1;
+	if(!write_float(act_page_start, data_cnt++, PID_ROL.P) == FLASH_COMPLETE) return 0;	//–¥»Î ß∞‹
+	if(!write_float(act_page_start, data_cnt++, PID_ROL.I) == FLASH_COMPLETE) return 0;	//–¥»Î ß∞‹
+	if(!write_float(act_page_start, data_cnt++, PID_ROL.D) == FLASH_COMPLETE) return 0;	//–¥»Î ß∞‹
+	if(!write_float(act_page_start, data_cnt++, PID_PIT.P) == FLASH_COMPLETE) return 0;	//–¥»Î ß∞‹
+	if(!write_float(act_page_start, data_cnt++, PID_PIT.I) == FLASH_COMPLETE) return 0;	//–¥»Î ß∞‹
+	if(!write_float(act_page_start, data_cnt++, PID_PIT.D) == FLASH_COMPLETE) return 0;	//–¥»Î ß∞‹
+	if(!write_float(act_page_start, data_cnt++, PID_YAW.P) == FLASH_COMPLETE) return 0;	//–¥»Î ß∞‹
+	if(!write_float(act_page_start, data_cnt++, PID_YAW.I) == FLASH_COMPLETE) return 0;	//–¥»Î ß∞‹
+	if(!write_float(act_page_start, data_cnt++, PID_YAW.D) == FLASH_COMPLETE) return 0;	//–¥»Î ß∞‹
+	if(!write_int(act_page_start, data_cnt++, GYRO_OFFSET.x) == FLASH_COMPLETE) return 0;	//–¥»Î ß∞‹
+	if(!write_int(act_page_start, data_cnt++, GYRO_OFFSET.y) == FLASH_COMPLETE) return 0;	//–¥»Î ß∞‹
+	if(!write_int(act_page_start, data_cnt++, GYRO_OFFSET.z) == FLASH_COMPLETE) return 0;	//–¥»Î ß∞‹
+	if(!write_int(act_page_start, data_cnt++, ACC_OFFSET.x) == FLASH_COMPLETE) return 0;	//–¥»Î ß∞‹
+	if(!write_int(act_page_start, data_cnt++, ACC_OFFSET.y) == FLASH_COMPLETE) return 0;	//–¥»Î ß∞‹
+	if(!write_int(act_page_start, data_cnt++, ACC_OFFSET.z) == FLASH_COMPLETE) return 0;	//–¥»Î ß∞‹
+	
+	FLASH_Lock(); 
 
 	return 1;
 }
 u8 Data_Read(void)
 {
-//	u8 act_page_num = 255;	//ø…“‘ π”√µƒ“≥¬Î
-//	u32 act_page_start = 0;	//∏√“≥∆ ºµÿ÷∑
-//	
-//	act_page_num = get_act_page();
-//	if(act_page_num==0)
-//		return 0;
-//	else
-//		act_page_num -= 1;
-//	act_page_start = FLASH_USER_START_ADDR + (act_page_num * PAGE_BYTES);
-//	
-//	u16 data_cnt = 1;
-//	PID_ROL.P = read_float(act_page_start, data_cnt++);
-//	PID_ROL.I = read_float(act_page_start, data_cnt++);
-//	PID_ROL.D = read_float(act_page_start, data_cnt++);
-//	PID_PIT.P = read_float(act_page_start, data_cnt++);
-//	PID_PIT.I = read_float(act_page_start, data_cnt++);
-//	PID_PIT.D = read_float(act_page_start, data_cnt++);
-//	PID_YAW.P = read_float(act_page_start, data_cnt++);
-//	PID_YAW.I = read_float(act_page_start, data_cnt++);
-//	PID_YAW.D = read_float(act_page_start, data_cnt++);
-//	GYRO_OFFSET.x = read_int(act_page_start, data_cnt++);
-//	GYRO_OFFSET.y = read_int(act_page_start, data_cnt++);
-//	GYRO_OFFSET.z = read_int(act_page_start, data_cnt++);
-//	ACC_OFFSET.x = read_int(act_page_start, data_cnt++);
-//	ACC_OFFSET.y = read_int(act_page_start, data_cnt++);
-//	ACC_OFFSET.z = read_int(act_page_start, data_cnt++);
-//	
+	u8 act_page_num = 255;	//ø…“‘ π”√µƒ“≥¬Î
+	u32 act_page_start = 0;	//∏√“≥∆ ºµÿ÷∑
+	
+	act_page_num = get_act_page();
+	if(act_page_num==0)
+		return 0;
+	else
+		act_page_num -= 1;
+	act_page_start = FLASH_USER_START_ADDR + (act_page_num * PAGE_BYTES);
+	
+	u16 data_cnt = 1;
+	PID_ROL.P = read_float(act_page_start, data_cnt++);
+	PID_ROL.I = read_float(act_page_start, data_cnt++);
+	PID_ROL.D = read_float(act_page_start, data_cnt++);
+	PID_PIT.P = read_float(act_page_start, data_cnt++);
+	PID_PIT.I = read_float(act_page_start, data_cnt++);
+	PID_PIT.D = read_float(act_page_start, data_cnt++);
+	PID_YAW.P = read_float(act_page_start, data_cnt++);
+	PID_YAW.I = read_float(act_page_start, data_cnt++);
+	PID_YAW.D = read_float(act_page_start, data_cnt++);
+	GYRO_OFFSET.x = read_int(act_page_start, data_cnt++);
+	GYRO_OFFSET.y = read_int(act_page_start, data_cnt++);
+	GYRO_OFFSET.z = read_int(act_page_start, data_cnt++);
+	ACC_OFFSET.x = read_int(act_page_start, data_cnt++);
+	ACC_OFFSET.y = read_int(act_page_start, data_cnt++);
+	ACC_OFFSET.z = read_int(act_page_start, data_cnt++);
+	
 	return 1;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////

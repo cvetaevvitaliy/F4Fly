@@ -19,13 +19,11 @@ int task_cap_rc(void)
     static u8 capok;
     _SS
     TIM3_Cap_Init(0XFFFF, 72);
-    TIM4_Cap_Init(0XFFFF, 72);
+   // TIM4_Cap_Init(0XFFFF, 72);
     while (1)
     {
         static u8 utime;
         WaitX(25 - utime * 2);
-        TIM4_CAPTURE_STA_CH1 = 0;
-        TIM4_CAPTURE_STA_CH2 = 0;
         TIM3_CAPTURE_STA_CH1 = 0;
         TIM3_CAPTURE_STA_CH2 = 0;
         TIM3_CAPTURE_STA_CH3 = 0;
@@ -35,20 +33,20 @@ int task_cap_rc(void)
         while (1)
         {
             WaitX(2);
-            if (TIM4_CAPTURE_STA_CH2 & 0X80)
-            {
-                temp  = TIM4_CAPTURE_STA_CH2 & 0X3F;
-                temp *= 65536;
-                temp += TIM4_CAPTURE_VAL_CH2;
-                Rc_Pwm_In[0] = temp;
-                capok |= (1 << 0);
-            }
+//            if (TIM4_CAPTURE_STA_CH2 & 0X80)
+//            {
+//                temp  = TIM4_CAPTURE_STA_CH2 & 0X3F;
+//                temp *= 65536;
+//                temp += TIM4_CAPTURE_VAL_CH2;
+//                Rc_Pwm_In[0] = temp;
+//                capok |= (1 << 0);
+//            }
             if (TIM3_CAPTURE_STA_CH1 & 0X80)
             {
                 temp  = TIM3_CAPTURE_STA_CH1 & 0X3F;
                 temp *= 65536;
                 temp += TIM3_CAPTURE_VAL_CH1;
-                Rc_Pwm_In[1] = temp;
+                Rc_Pwm_In[0] = temp;
                 capok |= (1 << 1);
             }
             if (TIM3_CAPTURE_STA_CH2 & 0X80)
@@ -56,7 +54,7 @@ int task_cap_rc(void)
                 temp  = TIM3_CAPTURE_STA_CH2 & 0X3F;
                 temp *= 65536;
                 temp += TIM3_CAPTURE_VAL_CH2;
-                Rc_Pwm_In[2] = temp;
+                Rc_Pwm_In[5] = temp;
                 capok |= (1 << 2);
             }
             if (TIM3_CAPTURE_STA_CH3 & 0X80)
@@ -75,14 +73,14 @@ int task_cap_rc(void)
                 Rc_Pwm_In[4] = temp;
                 capok |= (1 << 4);
             }
-            if (TIM4_CAPTURE_STA_CH1 & 0X80)
-            {
-                temp  = TIM4_CAPTURE_STA_CH1 & 0X3F;
-                temp *= 65536;
-                temp += TIM4_CAPTURE_VAL_CH1;
-                Rc_Pwm_In[5] = temp;
-                capok |= (1 << 5);
-            }
+//            if (TIM4_CAPTURE_STA_CH1 & 0X80)
+//            {
+//                temp  = TIM4_CAPTURE_STA_CH1 & 0X3F;
+//                temp *= 65536;
+//                temp += TIM4_CAPTURE_VAL_CH1;
+//                Rc_Pwm_In[5] = temp;
+//                capok |= (1 << 5);
+//            }
             utime++;
             if (utime > 2 || capok == 0x1f)
             {

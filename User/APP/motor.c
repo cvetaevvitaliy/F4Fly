@@ -2,14 +2,10 @@
 
 #define Moto_PwmMax 1000
 
-//#define PWM_SetCompare1(x)  TIM_SetCompare2(TIM8, (x));
-//#define PWM_SetCompare2(x)  TIM_SetCompare1(TIM2, (x));
-//#define PWM_SetCompare3(x)  TIM_SetCompare2(TIM2, (x));
-//#define PWM_SetCompare4(x)  TIM_SetCompare1(TIM8, (x));
 #define PWM_SetCompare1(x)  TIM_SetCompare2(TIM8, (x));
-#define PWM_SetCompare2(x)  TIM_SetCompare1(TIM8, (x));
+#define PWM_SetCompare2(x)  TIM_SetCompare1(TIM2, (x));
 #define PWM_SetCompare3(x)  TIM_SetCompare2(TIM2, (x));
-#define PWM_SetCompare4(x)  TIM_SetCompare1(TIM2, (x));
+#define PWM_SetCompare4(x)  TIM_SetCompare1(TIM8, (x));
 int32_t MOTO1_PWM, MOTO2_PWM, MOTO3_PWM, MOTO4_PWM;
 
 void Moto_PwmRflash(int32_t MOTO1_PWM, int32_t MOTO2_PWM, int32_t MOTO3_PWM, int32_t MOTO4_PWM)

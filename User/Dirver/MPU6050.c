@@ -379,12 +379,12 @@ void MPU6050_Dataanl(void)
 {
     MPU6050_ACC_LAST.x = ((((int16_t)mpu6050_buffer[0]) << 8)  | mpu6050_buffer[1 ])- ACC_OFFSET.x;// - ACC_OFFSET.x
     MPU6050_ACC_LAST.y = ((((int16_t)mpu6050_buffer[2]) << 8)  | mpu6050_buffer[3 ])- ACC_OFFSET.y;
-    MPU6050_ACC_LAST.z = ((((int16_t)mpu6050_buffer[4]) << 8)  | mpu6050_buffer[5 ])+ 0450;
+    MPU6050_ACC_LAST.z = ((((int16_t)mpu6050_buffer[4]) << 8)  | mpu6050_buffer[5 ])+ 450;
 
-    MPU6050_GYRO_LAST.x = ((((int16_t)mpu6050_buffer[8]) << 8)  | mpu6050_buffer[9 ])- GYRO_OFFSET.x ;//
-    MPU6050_GYRO_LAST.y = ((((int16_t)mpu6050_buffer[10]) << 8) | mpu6050_buffer[11])- GYRO_OFFSET.y ;
-    MPU6050_GYRO_LAST.z = ((((int16_t)mpu6050_buffer[12]) << 8) | mpu6050_buffer[13])- GYRO_OFFSET.z ;
-//  Sys_Printf(Printf_USART, "acc:%d,%d,%d\n",MPU6050_ACC_LAST.x,MPU6050_ACC_LAST.y,MPU6050_ACC_LAST.z);
+    MPU6050_GYRO_LAST.x = ((((int16_t)mpu6050_buffer[8]) << 8)  | mpu6050_buffer[9 ])-36- GYRO_OFFSET.x ;//
+    MPU6050_GYRO_LAST.y = ((((int16_t)mpu6050_buffer[10]) << 8) | mpu6050_buffer[11])-15- GYRO_OFFSET.y ;
+    MPU6050_GYRO_LAST.z = ((((int16_t)mpu6050_buffer[12]) << 8) | mpu6050_buffer[13])+28- GYRO_OFFSET.z ;
+ // Sys_Printf(Printf_USART, "acc:%d,%d,%d\n",GYRO_OFFSET.x,GYRO_OFFSET.y,GYRO_OFFSET.z);
 //MPU6050_GYRO_Gr_x=MPU6050_GYRO_LAST.x * 0.0005326;
 //MPU6050_GYRO_Gr_y=MPU6050_GYRO_LAST.y * 0.0005326;
 //MPU6050_GYRO_Gr_z=MPU6050_GYRO_LAST.z * 0.0005326;
@@ -392,7 +392,7 @@ void MPU6050_Dataanl(void)
     if (!GYRO_OFFSET_OK) //陀螺仪 零偏计算
     {
         static int32_t  tempgx = 0, tempgy = 0, tempgz = 0;
-        static uint8_t cnt_g = 0;
+        static uint16_t cnt_g = 0;
         if (cnt_g == 0) //刚进入 寄存器清零
         {
             GYRO_OFFSET.x = 0;
@@ -410,12 +410,14 @@ void MPU6050_Dataanl(void)
         tempgz += MPU6050_GYRO_LAST.z;
         if (cnt_g == 200) //加两百次 求平均
         {
-            GYRO_OFFSET.x = tempgx / cnt_g-1;
+            GYRO_OFFSET.x = tempgx / cnt_g;
             GYRO_OFFSET.y = tempgy / cnt_g;
-            GYRO_OFFSET.z = tempgz / cnt_g+1;
+            GYRO_OFFSET.z = tempgz / cnt_g;
             cnt_g = 0;
             GYRO_OFFSET_OK = 1;//计算完成标志
-						//Data_Save();
+						Data_Save();
+
+            //Sys_Printf(USART1, "A:%d,%d,%d",ACC_OFFSET.X,ACC_OFFSET.Y,ACC_OFFSET.Z);
             return;
         }
         cnt_g++;

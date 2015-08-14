@@ -125,7 +125,55 @@ void uart3_init(u32 bound)
 
 
 }
-
+void USART_ConfigForCom_TX(void)
+{
+	 GPIO_InitTypeDef GPIO_InitStructure;
+   NVIC_InitTypeDef	NVIC_InitStructure;
+   USART_InitTypeDef USART_InitStructure;
+	
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2,ENABLE);
+	
+	GPIO_PinAFConfig(GPIOA,GPIO_PinSource2,GPIO_AF_USART2); //GPIOA2复用为USART2
+	GPIO_PinAFConfig(GPIOA,GPIO_PinSource3,GPIO_AF_USART2); //GPIOA3复用为USART2
+   //配置PA2即USART2_TX_
+   GPIO_InitStructure.GPIO_Pin=GPIO_Pin_2;
+   GPIO_InitStructure.GPIO_Speed=GPIO_Speed_50MHz;
+   GPIO_InitStructure.GPIO_Mode=GPIO_Mode_AF;
+	 GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; //推挽复用输出
+	 GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP; //上拉
+   GPIO_Init(GPIOA,&GPIO_InitStructure);
+   //配置PA3即USART2_RX
+   GPIO_InitStructure.GPIO_Pin=GPIO_Pin_3;
+   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;	//速度50MHz
+   GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
+   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+   GPIO_Init(GPIOA,&GPIO_InitStructure);
+   //进行USART2的中断配置
+   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0);
+   NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn;
+   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;		  //优先级为第0级
+   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+   NVIC_Init(&NVIC_InitStructure);
+   //配置USART2
+/******************************************************
+     波特率为115200,字长为8，无奇偶校验位，终止位为1.
+******************************************************/
+   USART_InitStructure.USART_BaudRate=256000;
+   USART_InitStructure.USART_WordLength=USART_WordLength_8b;
+   USART_InitStructure.USART_StopBits=USART_StopBits_1;
+   USART_InitStructure.USART_Parity=USART_Parity_No;
+   USART_InitStructure.USART_Mode=USART_Mode_Rx|USART_Mode_Tx;
+   USART_InitStructure.USART_HardwareFlowControl=USART_HardwareFlowControl_None;
+   USART_Init(USART2,&USART_InitStructure);
+   //开USART2中断触发方式为接收中断
+   USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);//不能开IT-TXE中断使能，因为初始化时也会有TXE置位，因为此时发送数据寄存器为空
+   //使能USART2的时钟
+   USART_Cmd(USART2,ENABLE);
+   //清除USART2的发送结束标志位，以免第一个字符发送不出去
+   USART_ClearFlag(USART2,USART_FLAG_TC);
+   //串口2设置完成 
+}
 
 
 /*
