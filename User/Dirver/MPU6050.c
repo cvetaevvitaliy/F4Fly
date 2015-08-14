@@ -379,7 +379,7 @@ void MPU6050_Dataanl(void)
 {
     MPU6050_ACC_LAST.x = ((((int16_t)mpu6050_buffer[0]) << 8)  | mpu6050_buffer[1 ])- ACC_OFFSET.x;// - ACC_OFFSET.x
     MPU6050_ACC_LAST.y = ((((int16_t)mpu6050_buffer[2]) << 8)  | mpu6050_buffer[3 ])- ACC_OFFSET.y;
-    MPU6050_ACC_LAST.z = ((((int16_t)mpu6050_buffer[4]) << 8)  | mpu6050_buffer[5 ])+ 1450;
+    MPU6050_ACC_LAST.z = ((((int16_t)mpu6050_buffer[4]) << 8)  | mpu6050_buffer[5 ])+ 0450;
 
     MPU6050_GYRO_LAST.x = ((((int16_t)mpu6050_buffer[8]) << 8)  | mpu6050_buffer[9 ])- GYRO_OFFSET.x ;//
     MPU6050_GYRO_LAST.y = ((((int16_t)mpu6050_buffer[10]) << 8) | mpu6050_buffer[11])- GYRO_OFFSET.y ;
@@ -415,9 +415,7 @@ void MPU6050_Dataanl(void)
             GYRO_OFFSET.z = tempgz / cnt_g+1;
             cnt_g = 0;
             GYRO_OFFSET_OK = 1;//计算完成标志
-						Data_Save();
-
-            //Sys_Printf(USART1, "A:%d,%d,%d",ACC_OFFSET.X,ACC_OFFSET.Y,ACC_OFFSET.Z);
+						//Data_Save();
             return;
         }
         cnt_g++;

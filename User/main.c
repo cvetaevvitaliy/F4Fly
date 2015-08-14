@@ -27,14 +27,14 @@ void SYS_INIT(void)
 
     delay_init(168);
     NVIC_Configuration();
-    uart3_init(115200);
+    uart3_init(256000);
 
     // Sys_Printf(USART1, "\r\nUSART1 ok");
     // Sys_Printf(USART2, "\r\nUSART2 ok");
     // Sys_Printf(USART3, "\r\nUSART3 ok");
 
     Sys_Printf(Printf_USART, (char *)"\r\nPrintf_USART ok");
-
+//Data_Read();
     delay_ms(100);
 }
 
@@ -46,9 +46,9 @@ int main(void)
 		 RunTaskA(task_6050, 0);
 		 RunTaskA(task_fast, 1);
 		 RunTaskA(task_pwm_ex, 2);
-		 RunTaskA(task_PX4FLOW,3);
+		// RunTaskA(task_PX4FLOW,3);
 		 RunTaskA(task_cap_rc, 4);
-		 RunTaskA(task_Oled, 5);
-		 RunTaskA(task_led, 5);	 
+		// RunTaskA(task_Oled, 5);
+		 RunTaskA(task_led, 6);	 
 	 }
 }

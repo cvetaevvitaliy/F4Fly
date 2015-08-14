@@ -111,8 +111,8 @@ void Ex_Init(void)
 
     *ex_on_off = 255;
     *yaw_just = 10;
-    *rol_just = 10;
-    *pit_just = 10;
+    *rol_just = 13;
+    *pit_just = 12;
 }
 void Ex_Anl(void)
 {
