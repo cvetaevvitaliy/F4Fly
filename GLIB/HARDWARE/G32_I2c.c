@@ -92,6 +92,7 @@ static bool Soft_I2cx_Start(void)
 	IIC_SDA0;
 	Soft_I2cx_Delay();
 	IIC_SCL0; 
+	return 1;
 }
 static void Soft_I2cx_Stop(void)
 {

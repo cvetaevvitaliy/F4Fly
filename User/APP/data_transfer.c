@@ -8,6 +8,12 @@
 #include "Imu.h"
 #include "Rc.h"
 #include "pwm.h"
+
+int RuiSaKey = 0;
+int RuiSaThr = 0;
+int RuiSaRol = 0;
+int RuiSaPit = 0;
+
 //#include "bmp085.h"
 #define DATA_TRANSFER_USE_USART
 
@@ -31,7 +37,7 @@
 #define PID_PID_1_I_MULTIPLYING (100 )
 #define PID_PID_1_D_MULTIPLYING (100 )
 
-float *ex_on_off = &PID_PID_2.P;
+float * ex_on_off = &PID_PID_2.P;
 #define PID_PID_2_P_MULTIPLYING (1  )
 #define PID_PID_2_I_MULTIPLYING (1  )
 #define PID_PID_2_D_MULTIPLYING (1  )
@@ -41,30 +47,47 @@ float *KALMAN_P0 = &PID_PID_3.D;
 #define PID_PID_3_P_MULTIPLYING (10000  )
 #define PID_PID_3_I_MULTIPLYING (100  )
 #define PID_PID_3_D_MULTIPLYING (1  )
+float *runtime = &PID_PID_4.P;
 #define PID_PID_4_P_MULTIPLYING (1  )
 #define PID_PID_4_I_MULTIPLYING (1  )
 #define PID_PID_4_D_MULTIPLYING (1  )
+float     *IN_ROP = &PID_PID_5.P,    *IN_POP = &PID_PID_6.P,
+           *IN_ROI = &PID_PID_5.I,    *IN_POI = &PID_PID_6.I,
+            *IN_ROD = &PID_PID_5.D,    *IN_POD = &PID_PID_6.D;
+#define PID_PID_5_P_MULTIPLYING (1000)
+#define PID_PID_5_I_MULTIPLYING (1000)
+#define PID_PID_5_D_MULTIPLYING (1000)
+#define PID_PID_6_P_MULTIPLYING (1000)
+#define PID_PID_6_I_MULTIPLYING (1000)
+#define PID_PID_6_D_MULTIPLYING (1000)
+float   *O_POP = &PID_PID_7.P,
+         *O_POI = &PID_PID_7.I,
+          *O_POD = &PID_PID_7.D;
+#define PID_PID_7_P_MULTIPLYING (10 )
+#define PID_PID_7_I_MULTIPLYING (10 )
+#define PID_PID_7_D_MULTIPLYING (10 )
+float   *O_ROP = &PID_PID_8.P,
+         *O_ROI = &PID_PID_8.I,
+          *O_ROD = &PID_PID_8.D;
+#define PID_PID_8_P_MULTIPLYING  (10)
+#define PID_PID_8_I_MULTIPLYING  (10)
+#define PID_PID_8_D_MULTIPLYING  (10)
 
-#define PID_PID_5_P_MULTIPLYING (1  )
-#define PID_PID_5_I_MULTIPLYING (1  )
-#define PID_PID_5_D_MULTIPLYING (1  )
-#define PID_PID_6_P_MULTIPLYING (1  )
-#define PID_PID_6_I_MULTIPLYING (1  )
-#define PID_PID_6_D_MULTIPLYING (1  )
-#define PID_PID_7_P_MULTIPLYING (1  )
-#define PID_PID_7_I_MULTIPLYING (1  )
-#define PID_PID_7_D_MULTIPLYING (1  )
-
-#define PID_PID_8_P_MULTIPLYING  (1  )
-#define PID_PID_8_I_MULTIPLYING  (1  )
-#define PID_PID_8_D_MULTIPLYING  (1  )
+float *RuiSaTime1 = &PID_PID_9.P;
+float *RuiSaTime2 = &PID_PID_9.I;
+float *RuiSaTime3 = &PID_PID_9.D;
+float *RuiSaTh1 = &PID_PID_10.P;
+float *RuiSaTh2 = &PID_PID_10.I;
+float *RuiSaTh3 = &PID_PID_10.D;
 #define PID_PID_9_P_MULTIPLYING  (1  )
 #define PID_PID_9_I_MULTIPLYING  (1  )
 #define PID_PID_9_D_MULTIPLYING  (1  )
 #define PID_PID_10_P_MULTIPLYING (1  )
 #define PID_PID_10_I_MULTIPLYING (1  )
 #define PID_PID_10_D_MULTIPLYING (1  )
-
+float *yaw_off  = &PID_PID_11.P;
+float *rol_off  = &PID_PID_11.I;
+float *pit_off  = &PID_PID_11.D;
 #define PID_PID_11_P_MULTIPLYING (1  )
 #define PID_PID_11_I_MULTIPLYING (1  )
 #define PID_PID_11_D_MULTIPLYING (1  )
@@ -81,38 +104,46 @@ void Ex_Init(void)
     *KALMAN_R  = 20.0000;
     *KALMAN_P0 = 2210.0000;
 
-//	PID_ROL.P = 4;
-//	PID_ROL.I = 0;
-//	PID_ROL.D = 0.14;
-//	
-//	PID_PIT.P = 4;
-//	PID_PIT.I = 0;
-//	PID_PIT.D = 0.14;
-//	
-//	PID_YAW.P = 1;
-//	PID_YAW.I = 0;
-//	PID_YAW.D = 0.08;
-	PID_ROL.P = 200;
-	PID_ROL.I = 0;
-	PID_ROL.D = 0;
-	
-	PID_PIT.P = 200;
-	PID_PIT.I = 0;
-	PID_PIT.D = 0;
-	
-	PID_YAW.P = 8;
-	PID_YAW.I = 0;
-	PID_YAW.D = 0.4;
-	
+    PID_ROL.P = 100;
+    PID_ROL.I = 0;
+    PID_ROL.D = 0;
+
+    PID_PIT.P = 100;
+    PID_PIT.I = 0;
+    PID_PIT.D = 0;
+
+    PID_YAW.P = 20;
+    PID_YAW.I = 0.5;
+    PID_YAW.D = 2;
 
     PID_ALT.P = 0.1;
-    PID_ALT.I = 0.01;
+    PID_ALT.I = 0.015;
     PID_ALT.D = 0.2;
 
     *ex_on_off = 255;
+		
     *yaw_just = 10;
-    *rol_just = 13;
-    *pit_just = 12;
+    *rol_just = 10;
+    *pit_just = 10;
+
+    *yaw_off = 1200;
+    *rol_off = 2050;
+    *pit_off = 1800;
+
+
+    *IN_ROP = 0.05;    *IN_POP = 0.10;  /**IN_YOP = 0.045;*/
+    *IN_ROI = 0.10;     *IN_POI = 0.10;      /**IN_YOI = 0;*/
+    *IN_ROD = 1.000;     *IN_POD = 2.000;   /**IN_YOD = 0.012;*/
+
+    *runtime = 20;
+
+    *O_POP = 1300;
+    *O_POI = 0;
+    *O_POD = 0;
+    *O_ROP = 1300;
+    *O_ROI = 0;
+    *O_ROD = 0;
+
 }
 void Ex_Anl(void)
 {
@@ -128,7 +159,7 @@ void Ex_Anl(void)
 }
 struct DATA_TRANSFER_SWITCH Ex_ON_OFF, Send;
 
-S_INT16_XYZ Acc, Average_Acc, Average2_Acc, Average3_Acc, Average1_Gyr, Average2_Gyr, Gyr, Mag,rollt;
+S_INT16_XYZ Acc, Average_Acc, Average2_Acc, Average3_Acc, Average1_Gyr, Average2_Gyr, Gyr, Mag, rollt;
 void Data_Send_Check(u16 check);
 void Data_Receive_Anl(u8 *data_buf, u8 num)
 {
@@ -142,7 +173,10 @@ void Data_Receive_Anl(u8 *data_buf, u8 num)
     /////////////////////////////////////////////////////////////////////////////////////
     if (*(data_buf + 2) == 0X01)
     {
-
+        if (*(data_buf + 4) == 0X04)
+            MPU6050_CalOff_Acc();
+        if (*(data_buf + 4) == 0X05)
+            MPU6050_CalOff_Gyr();
         if (*(data_buf + 4) == 0X04)
             ;//Cal_Compass();
         if (*(data_buf + 4) == 0X05)
@@ -286,13 +320,13 @@ void Data_Send_Status(void)
     data_to_send[_cnt++] = 0x01;
     data_to_send[_cnt++] = 0;
     vs16 _temp;
-    _temp = (int)(Att_Angle.rol * 100);
+    _temp = (int)(Att_Angle.rol * 1000);
     data_to_send[_cnt++] = BYTE1(_temp);
     data_to_send[_cnt++] = BYTE0(_temp);
-    _temp = (int)(Att_Angle.pit * 100);
+    _temp = (int)(Att_Angle.pit * 1000);
     data_to_send[_cnt++] = BYTE1(_temp);
     data_to_send[_cnt++] = BYTE0(_temp);
-    _temp = (int)(Att_Angle.yaw * 100);
+    _temp = (int)(Att_Angle.yaw * 1000);
     data_to_send[_cnt++] = BYTE1(_temp);
     data_to_send[_cnt++] = BYTE0(_temp);
     _temp = Alt_ultrasonic;
@@ -330,10 +364,12 @@ void Data_Send_Senser(void)
     data_to_send[_cnt++] = 0;
     vs16 _temp;
 #define EX_ACC Acc
-    data_to_send[_cnt++] = BYTE1(EX_ACC.x);
-    data_to_send[_cnt++] = BYTE0(EX_ACC.x);
-    data_to_send[_cnt++] = BYTE1(EX_ACC.y);
-    data_to_send[_cnt++] = BYTE0(EX_ACC.y);
+    _temp = (int)(PID_ROL.OUT);
+    data_to_send[_cnt++] = BYTE1(_temp);
+    data_to_send[_cnt++] = BYTE0(_temp);
+    _temp = (int)(PID_PIT.OUT);
+    data_to_send[_cnt++] = BYTE1(_temp);
+    data_to_send[_cnt++] = BYTE0(_temp);
     data_to_send[_cnt++] = BYTE1(EX_ACC.z);
     data_to_send[_cnt++] = BYTE0(EX_ACC.z);
     data_to_send[_cnt++] = BYTE1(Gyr.x);
@@ -795,8 +831,8 @@ void Data_Send_F4(void)
     //    data_to_send[_cnt++] = BYTE0(Rc_D.AUX5);
     //    data_to_send[_cnt++] = BYTE1(Rc_D.AUX6);
     //    data_to_send[_cnt++] = BYTE0(Rc_D.AUX6);
-        data_to_send[_cnt++] = BYTE1(Alt_ultrasonic);
-        data_to_send[_cnt++] = BYTE0(Alt_ultrasonic);
+    data_to_send[_cnt++] = BYTE1(Alt_ultrasonic);
+    data_to_send[_cnt++] = BYTE0(Alt_ultrasonic);
     data_to_send[3] = _cnt - 4;
     u8 sum = 0;
     for (u8 i = 0; i < _cnt; i++)

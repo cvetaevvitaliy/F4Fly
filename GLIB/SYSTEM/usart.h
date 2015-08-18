@@ -1,71 +1,83 @@
 #ifndef __USART_H
 #define __USART_H
-//#include <stdio.h>
-#include "sys.h"
+#include "stm32f4xx.h"
+#include <stdio.h>
 #include "Usart_Config.h"
-//#include "usart.h"
 
-/********************************************
-REMAP |  00      |   01         | 11        |
-      |  TX  RX  |   TX  RX     | TX  RX    |
-******|**********|**************|*******    |
-USART1|  A9  A10 |   B6  B7     |           |
-******|**********|**************|*******    |
-USART2|  A2  A3  |   (D5  D6)   |           |
-      |          |  (100)(144)  |           |
-******|**********|**************|*******    |
-USART3|  B10 B11 |   (C10 C11)  | (D8  D9)  |
-      |          | (64 100 144) | (100 144) |
-*********************************************
-2013/8/27                            ********
-2013/7/21                            ********
-********************************************/
 
-#define SENDBUFF_SIZE 5168
-extern void USART_DMA_Enable(USART_TypeDef *USARTx, u16 size);
+/**********************************************\
+ * USART1_CK  |   PA8    |          |          *
+ * USART1_TX  |   PA9    |   PB6    |          *
+ * USART1_RX  |   PA10   |   PB7    |          *
+ * USART1_CTS |   PA11   |          |          *
+ * USART1_RTS |   PA12   |          |          *
+ * ******************************************* *
+ * USART2_RTS |   PA1    |   PD4    |          *
+ * USART2_TX  |   PA2    |   PD5    |          *
+ * USART2_RX  |   PA3    |   PD6    |          *
+ * USART2_CK  |   PA4    |   PD7    |          *
+ * USART2_CTS |   PD3    |          |          *
+ * ******************************************* *
+ * USART3_TX  |   PB10   |   PD8    |   PC10   *
+ * USART3_RX  |   PB11   |   PD9    |   PC11   *
+ * USART3_CK  |   PB12   |   PD10   |   PC12   *
+ * USART3_CTS |   PB13   |   PD11   |          *
+ * USART3_RTS |   PB14   |   PD12   |          *
+ * ******************************************* *
+ * UART4_TX   |   PA0    |   PC10   |          *
+ * UART4_RX   |   PA1    |   PC11   |          *
+ * ******************************************* *
+ * UART5_TX   |   PC12   |          |          *
+ * UART5_RX   |   PD2    |          |          *
+ * ******************************************* *
+ * USART6_TX  |   PC6    |   PG14   |          *
+ * USART6_RX  |   PC7    |   PG9    |          *
+ * USART6_CK  |   PC8    |   PG7    |          *
+ * USART6_RTS |   PG8    |   PG12   |          *
+ * USART6_CTS |   PG15   |          |          *
+ * UART6_CTS  |   PG13   |          |          *
+\**********************************************/
 
-#define USART_SEND_LEN           200     //定义最大接收字节数 200   
-extern char  USART_TX_BUF[];
-
-/*****************是否使能 串口******************************/
-#if EN_USART_
-void uart_init(u32 bound);
-//extern u8  USART1_TX_BUF[];
+#ifdef EN_USART1
+extern u8 RxBuffer1[100];
+extern u8 RxCounter1;
 #endif
-#if EN_USART2_
-void uart2_init(u32 bound);
-//extern u8  USART2_TX_BUF[];
+#ifdef EN_USART2
+extern u8 RxBuffer2[100];
+extern u8 RxCounter2;
 #endif
-#if EN_USART3_
-extern void uart3_init(u32 bound);
-//extern u8  USART3_TX_BUF[];
+#ifdef EN_USART3
+extern u8 RxBuffer3[100];
+extern u8 RxCounter3;
 #endif
-/*****************是否使能 串口******************************/
-
-/*****************是否使能 接收******************************/
-#if EN_USART_RX
-#define USART_REC_LEN           200     //定义最大接收字节数 200   
-extern void ATK_Usart1_IQR(void);
-
-extern u8  USART_RX_BUF[USART_REC_LEN]; //接收缓冲,最大USART_REC_LEN个字节.末字节为换行符
-extern u16 USART_RX_STA;                //接收状态标记
+#ifdef EN_UART4
+extern u8 RxBuffer4[100];
+extern u8 RxCounter4;
 #endif
-
-#if EN_USART2_RX
-#define USART2_REC_LEN          200     //定义最大接收字节数 200   
-//#define USART2_MAX_RECV_LEN     800
-//#define USART2_MAX_SEND_LEN     200
-
-extern u8  USART2_RX_BUF[USART2_REC_LEN]; //接收缓冲,最大USART_REC_LEN个字节.末字节为换行符
-extern u16 USART2_RX_STA;               //接收状态标记
+#ifdef EN_UART5
+extern u8 RxBuffer5[100];
+extern u8 RxCounter5;
+#endif
+#ifdef EN_USART6
+extern u8 RxBuffer6[100];
+extern u8 RxCounter6;
 #endif
 
-#if EN_USART3_RX
-#define USART3_REC_LEN          200     //定义最大接收字节数 200   
+void USART_NVIC_Configuration(u8 USART ,u8 PriorityGroup,u8 PreemptionPriority,u8 SubPriority);
+/*
+ *   USART_NVIC_Configuration(1 ,1,0,2);
+ */
+void USART_Configuration(void);
+void USART1_Configuration(u32 BaudRate);
+void USART2_Configuration(u32 BaudRate);
+void USART3_Configuration(u32 BaudRate);
+void UART4_Configuration(u32 BaudRate);
+void UART5_Configuration(u32 BaudRate);
+void USART6_Configuration(u32 BaudRate);
 
-extern u8  USART3_RX_BUF[USART3_REC_LEN]; //接收缓冲,最大USART_REC_LEN个字节.末字节为换行符
-extern u16 USART3_RX_STA;               //接收状态标记
-#endif
-/*****************是否使能 接收******************************/
+void Send_ASCII(u8 USART , u8 *b);
+void Send_Hex(u8 USART, u8 c);
+void Send_USART_Hex(u8 USART, u8 *b, u8 i);
 
 #endif
+

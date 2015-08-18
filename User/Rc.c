@@ -1,6 +1,7 @@
 #include "Rc.h"
 #include "stm32_config.h"
 #include "flash_eeprom.h"
+#include "data_transfer.h"
 
 T_RC_Data Rc_Data;//1000~2000
 T_RC_Data Rc_D;
@@ -8,17 +9,17 @@ T_Control RC_Control;
 
 void Rc_DataAnl(u16 Rc_Pwm_In[5])
 {
- #if 1==THROTTLE_INVERTED
- Rc_Data.THROTTLE        =   3000-Rc_Pwm_In[3];
- //#error
- #elif 0==THROTTLE_INVERTED
- Rc_Data.THROTTLE        =   Rc_Pwm_In[3]-200;
- #endif
-    Rc_Data.YAW             =   Rc_Pwm_In[4]-200;
-    Rc_Data.ROLL            =   Rc_Pwm_In[5]-200;
-    Rc_Data.PITCH           =   Rc_Pwm_In[0]-200;
-    Rc_Data.AUX1            =   Rc_Pwm_In[2]-200;
-    Rc_Data.AUX2            =   Rc_Pwm_In[1]-200;
+#if 1==THROTTLE_INVERTED
+    Rc_Data.THROTTLE        =   3000 - Rc_Pwm_In[3];
+//#error
+#elif 0==THROTTLE_INVERTED
+    Rc_Data.THROTTLE        =   Rc_Pwm_In[3] - 200;
+#endif
+    Rc_Data.YAW             =   Rc_Pwm_In[4] - 350;
+    Rc_Data.ROLL            =   Rc_Pwm_In[5] - 250;
+    Rc_Data.PITCH           =   Rc_Pwm_In[0] - 250;
+    Rc_Data.AUX1            =   Rc_Pwm_In[2] - 200;
+    Rc_Data.AUX2            =   Rc_Pwm_In[1] - 200;
     Rc_Data.AUX3            =   Rc_Pwm_In[2];
     Rc_Data.AUX4            =   Rc_Pwm_In[2];
     Rc_Data.AUX5            =   Rc_Pwm_In[2];//?
@@ -27,16 +28,32 @@ void Rc_DataAnl(u16 Rc_Pwm_In[5])
 }
 void Rc_GetValue(T_RC_Data *temp)
 {
-    /*if(Rc_Data.THROTTLE<2000&&Rc_Data.THROTTLE >1000)*/temp->THROTTLE  = Rc_Data.THROTTLE;
-    /*if(Rc_Data.YAW     <2000&&Rc_Data.YAW      >1000)*/temp->YAW       = Rc_Data.YAW;
-    /*if(Rc_Data.ROLL    <2000&&Rc_Data.ROLL     >1000)*/temp->ROLL      = Rc_Data.ROLL;
-    /*if(Rc_Data.PITCH   <2000&&Rc_Data.PITCH    >1000)*/temp->PITCH     = Rc_Data.PITCH;
-    /*if(Rc_Data.AUX1    <2000&&Rc_Data.AUX1     >1000)*/temp->AUX1      = Rc_Data.AUX1;
-    /*if(Rc_Data.AUX2    <2000&&Rc_Data.AUX2     >1000)*/temp->AUX2      = Rc_Data.AUX2;
-    /*if(Rc_Data.AUX3    <2000&&Rc_Data.AUX3     >1000)*/temp->AUX3      = Rc_Data.AUX3;
-    /*if(Rc_Data.AUX4    <2000&&Rc_Data.AUX4     >1000)*/temp->AUX4      = Rc_Data.AUX4;
-    /*if(Rc_Data.AUX5    <2000&&Rc_Data.AUX5     >1000)*/temp->AUX5      = Rc_Data.AUX5;
-    /*if(Rc_Data.AUX6    <2000&&Rc_Data.AUX6     >1000)*/temp->AUX6      = Rc_Data.AUX6;
+    if (0 != RuiSaKey)
+    {
+        temp->THROTTLE  = 900;
+        temp->YAW       = 1500;
+        temp->ROLL      = 1500;
+        temp->PITCH     = 1500;
+        temp->AUX1      = 1500;
+        temp->AUX2      = 1500;
+        temp->AUX3      = 1500;
+        temp->AUX4      = 1500;
+        temp->AUX5      = 1500;
+        temp->AUX6      = 1500;
+    }
+    else
+    {
+        /*if(Rc_Data.THROTTLE<2000&&Rc_Data.THROTTLE >1000)*/temp->THROTTLE  = Rc_Data.THROTTLE;
+        /*if(Rc_Data.YAW     <2000&&Rc_Data.YAW      >1000)*/temp->YAW       = Rc_Data.YAW;
+        /*if(Rc_Data.ROLL    <2000&&Rc_Data.ROLL     >1000)*/temp->ROLL      = Rc_Data.ROLL;
+        /*if(Rc_Data.PITCH   <2000&&Rc_Data.PITCH    >1000)*/temp->PITCH     = Rc_Data.PITCH;
+        /*if(Rc_Data.AUX1    <2000&&Rc_Data.AUX1     >1000)*/temp->AUX1      = Rc_Data.AUX1;
+        /*if(Rc_Data.AUX2    <2000&&Rc_Data.AUX2     >1000)*/temp->AUX2      = Rc_Data.AUX2;
+        /*if(Rc_Data.AUX3    <2000&&Rc_Data.AUX3     >1000)*/temp->AUX3      = Rc_Data.AUX3;
+        /*if(Rc_Data.AUX4    <2000&&Rc_Data.AUX4     >1000)*/temp->AUX4      = Rc_Data.AUX4;
+        /*if(Rc_Data.AUX5    <2000&&Rc_Data.AUX5     >1000)*/temp->AUX5      = Rc_Data.AUX5;
+        /*if(Rc_Data.AUX6    <2000&&Rc_Data.AUX6     >1000)*/temp->AUX6      = Rc_Data.AUX6;
+    }
 }
 
 void RC_Analyse(T_RC_Data *rc_data, T_Control *ctl_data)
@@ -101,7 +118,7 @@ void RC_Analyse(T_RC_Data *rc_data, T_Control *ctl_data)
 //        static u16 fun_cnt3 = 0;
 //        if (rc_data->THROTTLE < RC_FUN_MIN && rc_data->YAW < RC_FUN_MIN && \
 //                rc_data->ROLL < RC_FUN_MIN && rc_data->PITCH < RC_FUN_MIN&&\
-//								fun_cnt3!=(RC_FUN_CNT+10))
+//                              fun_cnt3!=(RC_FUN_CNT+10))
 //            if (fun_cnt3 < RC_FUN_CNT)
 //                fun_cnt3++;
 //            else

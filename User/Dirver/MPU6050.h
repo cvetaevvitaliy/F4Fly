@@ -19,5 +19,6 @@ extern u8							ACC_OFFSET_OK;
 void MPU6050_Init(void);
 void MPU6050_Read(void);
 void MPU6050_Dataanl(void);
-
+extern void MPU6050_CalOff_Acc(void);
+extern void MPU6050_CalOff_Gyr(void);
 #endif

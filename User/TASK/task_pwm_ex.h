@@ -5,10 +5,14 @@
 #include "control.h"
 #include "pwm.h"
 #define EX_BaudRate 8
+extern void Ex_Anl(void);
+
 int task_pwm_ex(void)
 {
     _SS
     Ex_Init();
+	  Ex_Anl();
+
     TIM2_PWM_Init(5000, 42);
     TIM8_PWM_Init(5000, 84);
 	

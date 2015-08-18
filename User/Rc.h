@@ -22,8 +22,8 @@ extern void Rc_DataAnl(u16 Rc_Pwm_In[5]);
 void RC_Analyse(T_RC_Data *rc_data, T_Control *ctl_data);
 void Rc_GetValue(T_RC_Data *temp);
 
-#define RC_FUN_MIN  1200
-#define RC_FUN_MAX  2000
+#define RC_FUN_MIN  1300
+#define RC_FUN_MAX  1800
 #define RC_FUN_CNT  20
 #define RC_FUN_ZERO 900
 #ifdef __cplusplus

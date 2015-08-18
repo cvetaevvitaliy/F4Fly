@@ -4,7 +4,7 @@
 
 /////////////////////////////////////////////////////////////////////////////////////
 static u8  fac_us = 0; //us延时倍乘数
-static u16 fac_ms=0;//ms延时倍乘数,在ucos下,代表每个节拍的ms数
+//static u16 fac_ms=0;//ms延时倍乘数,在ucos下,代表每个节拍的ms数
 
 //初始化延迟函数
 //当使用ucos的时候,此函数会初始化ucos的时钟节拍
@@ -22,7 +22,7 @@ void delay_init(u8 SYSCLK)
 	reload=SYSCLK/8;		//每秒钟的计数次数 单位为K	   
 	reload*=1000000/OS_TICKS_PER_SEC;//根据OS_TICKS_PER_SEC设定溢出时间
 							//reload为24位寄存器,最大值:16777216,在168M下,约合0.7989s左右	
-	fac_ms=1000/OS_TICKS_PER_SEC;//代表ucos可以延时的最少单位	   
+//	fac_ms=1000/OS_TICKS_PER_SEC;//代表ucos可以延时的最少单位	   
 	SysTick->CTRL|=SysTick_CTRL_TICKINT_Msk;   	//开启SYSTICK中断
 	SysTick->LOAD=reload; 	//每1/OS_TICKS_PER_SEC秒中断一次	
 	SysTick->CTRL|=SysTick_CTRL_ENABLE_Msk;   	//开启SYSTICK

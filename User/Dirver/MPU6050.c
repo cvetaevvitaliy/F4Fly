@@ -375,11 +375,16 @@ float     MPU6050_GYRO_Gr_x,MPU6050_GYRO_Gr_y,MPU6050_GYRO_Gr_z;
 *******************************************************************************/
 #define     MPU6050_MAX     32767
 #define     MPU6050_MIN     -32768
+
+extern float *yaw_off;
+extern float *rol_off;
+extern float *pit_off;
+
 void MPU6050_Dataanl(void)
 {
-    MPU6050_ACC_LAST.x = ((((int16_t)mpu6050_buffer[0]) << 8)  | mpu6050_buffer[1 ])- ACC_OFFSET.x;// - ACC_OFFSET.x
-    MPU6050_ACC_LAST.y = ((((int16_t)mpu6050_buffer[2]) << 8)  | mpu6050_buffer[3 ])- ACC_OFFSET.y;
-    MPU6050_ACC_LAST.z = ((((int16_t)mpu6050_buffer[4]) << 8)  | mpu6050_buffer[5 ])+ 0450;
+    MPU6050_ACC_LAST.x = ((((int16_t)mpu6050_buffer[0]) << 8)  | mpu6050_buffer[1 ])- ACC_OFFSET.x-(2000-*rol_off);// - ACC_OFFSET.x
+    MPU6050_ACC_LAST.y = ((((int16_t)mpu6050_buffer[2]) << 8)  | mpu6050_buffer[3 ])- ACC_OFFSET.y-(2000-*pit_off);
+    MPU6050_ACC_LAST.z = ((((int16_t)mpu6050_buffer[4]) << 8)  | mpu6050_buffer[5 ])-(1000-*yaw_off);
 
     MPU6050_GYRO_LAST.x = ((((int16_t)mpu6050_buffer[8]) << 8)  | mpu6050_buffer[9 ])- GYRO_OFFSET.x ;//
     MPU6050_GYRO_LAST.y = ((((int16_t)mpu6050_buffer[10]) << 8) | mpu6050_buffer[11])- GYRO_OFFSET.y ;
@@ -444,7 +449,7 @@ void MPU6050_Dataanl(void)
             ACC_OFFSET.z = tempaz / cnt_a;
             cnt_a = 0;
             ACC_OFFSET_OK = 1;
-						Data_Save();
+						//Data_Save();
             //Sys_Printf(USART1, "G:%d,%d,%d",GYRO_OFFSET.X,GYRO_OFFSET.Y,GYRO_OFFSET.Z);
             return;
         }

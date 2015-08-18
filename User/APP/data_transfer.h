@@ -1,6 +1,33 @@
 #ifndef _DATA_TRANSFER_H_
 #define _DATA_TRANSFER_H_
 #include "sys.h"
+
+extern int RuiSaKey;
+extern int RuiSaThr;
+extern int RuiSaRol;
+extern int RuiSaPit;
+
+
+extern float *RuiSaTime1;
+extern float *RuiSaTime2;
+extern float *RuiSaTime3;
+extern float *RuiSaTime4;
+extern float *RuiSaTime5;
+extern float *RuiSaTime6;
+extern float *RuiSaTime7;
+extern float *RuiSaTime8;
+extern float *RuiSaTime9;
+
+extern float *RuiSaTh1;
+extern float *RuiSaTh2;
+extern float *RuiSaTh3;
+extern float *RuiSaTh4;
+extern float *RuiSaTh5;
+extern float *RuiSaTh6;
+extern float *RuiSaTh7;
+extern float *RuiSaTh8;
+extern float *RuiSaTh9;
+
 typedef struct int16_rcget
 {
     int16_t ROLL;

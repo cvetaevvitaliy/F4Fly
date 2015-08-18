@@ -15,9 +15,11 @@
 #define RC_ROL_P 50
 #define RC_PIT_P 50
 
+u16 PidAltArray[100] = {0};
 
-static float rol_i = 0, pit_i = 0, yaw_i = 0, alt_i = 0,
-             rol_ni = 0,  pit_ni = 0;
+
+static float rol_i = 0, pit_i = 0, yaw_i = 0, alt_i = 0;
+//rol_ni = 0,  pit_ni = 0;
 PID PID_ROL, PID_PIT, PID_YAW, PID_ALT, PID_POS,
     PID_PID_1, PID_PID_2, PID_PID_3, PID_PID_4,
     PID_PID_5, PID_PID_6, PID_PID_7, PID_PID_8,
@@ -28,10 +30,10 @@ static S_INT16_XYZ   *gyr_in;
 //static S_INT16_XYZ   *acc_in;
 static T_RC_Data     *rc_in ;
 static T_Control     *ctl;
-float     IN_ROP = 0.040,    IN_POP = 0.040,  IN_YOP = 0.045,
-          IN_ROI = 0,   IN_POI = 0, IN_YOI = 0,
-          IN_ROD = 1.33,    IN_POD = 1.33, IN_YOD = 0.012,
-          Last_Angle_gx = 0,  LAST_Angle_gy = 0, LAST_Angle_gz = 0,
+extern float (*IN_ROP), (*IN_POP),
+       (*IN_ROI), (*IN_POI),
+       (*IN_ROD), (*IN_POD);
+float     Last_Angle_gx = 0,  LAST_Angle_gy = 0, LAST_Angle_gz = 0,
           Out_PID_X = 0,      Out_PID_Y = 0,    Out_PID_Z;
 int     Angle_gy = 0,       Angle_gx = 0,     Angle_gz = 0;
 
@@ -67,7 +69,7 @@ int Alt_Error, Alt_Error_Last;
 void ALT_Control(u32 ALT_Set)
 {
     static u16 Alt_time = 0, flag_time = 0;
-    Alt_time++; if (Alt_time > 250)
+    Alt_time++; if (Alt_time > 10)
     {
         Alt_time = 0;
         flag_time = 1;
@@ -115,11 +117,18 @@ void Yaw_Control(void)
     PID_YAW.pout = PID_YAW.P * angle.yaw;
     /*****************************************************
     *****************************************************/
+    yaw_i += angle.yaw; //积分
+    if (yaw_i > INTEGRAL_WINDUP_Y)
+        yaw_i = INTEGRAL_WINDUP_Y;
+    else if (yaw_i < -INTEGRAL_WINDUP_Y)
+        yaw_i = -INTEGRAL_WINDUP_Y;
+    PID_YAW.iout = PID_YAW.I * yaw_i;
+    /****************************************************/
     PID_YAW.dout = PID_YAW.D * gyr_in->z;
     /*****************************************************
     /PID
     *****************************************************/
-    PID_YAW.OUT = PID_YAW.pout  + PID_YAW.dout;
+    PID_YAW.OUT = PID_YAW.pout + PID_YAW.iout + PID_YAW.dout;
 }
 void Rol_Control(void)
 {   extern u16 Alt_ultrasonic;
@@ -134,13 +143,18 @@ void Rol_Control(void)
 
 //-------------------外环----------------------------------
     Angle_gx = -(gyr_in->x);
-    angle.rol = att_in->rol + (rc_in->ROLL  - 1660) / RC_ROL_P - X_PID + (*rol_just - 10); //
+    angle.rol = att_in->rol + (rc_in->ROLL  - 1500) / RC_ROL_P + RuiSaRol; // + (*rol_just - 10); //
 
     Out_PID_X = PID_ROL.P * angle.rol + PID_ROL.I * rol_i;
 //-------------------内环-----------------------------------
+    rol_i += angle.rol; //积分
+    if (rol_i > INTEGRAL_WINDUP_R)
+        rol_i = INTEGRAL_WINDUP_R;
+    else if (rol_i < -INTEGRAL_WINDUP_R)
+        rol_i = -INTEGRAL_WINDUP_R;
+    PID_ROL.iout = (*IN_ROI) * rol_i;
 
-
-    PID_ROL.OUT = (Angle_gx * 3.5 + Out_PID_X) * IN_ROP + (Angle_gx - Last_Angle_gx) * IN_ROD;
+    PID_ROL.OUT = (Angle_gx * 3.5 + Out_PID_X) * (*IN_ROP) + (Angle_gx - Last_Angle_gx) * (*IN_ROD) + PID_ROL.iout ;
     Last_Angle_gx = Angle_gx;
     if (PID_ROL.OUT >  400) {PID_ROL.OUT = 400;}
     if (PID_ROL.OUT < -400) {PID_ROL.OUT = -400;}
@@ -149,14 +163,8 @@ void Rol_Control(void)
 //    /P
 //    *****************************************************/
 
-//    rol_i += angle.rol; //积分
-//    if (rol_i > INTEGRAL_WINDUP_R)
-//        rol_i = INTEGRAL_WINDUP_R;
-//    else if (rol_i < -INTEGRAL_WINDUP_R)
-//        rol_i = -INTEGRAL_WINDUP_R;
-//
+
 //PID_ROL.pout = PID_ROL.P * angle.rol;
-//PID_ROL.iout = PID_ROL.I * rol_i;
 //PID_ROL.dout = PID_ROL.D * gyr_in->x;
 
 //    PID_ROL.OUT = PID_ROL.pout + PID_ROL.iout - PID_ROL.dout;
@@ -173,12 +181,17 @@ void Pit_Control(void)
     Mag.y = balance_y;
 //------------------外环----------------------------------
     Angle_gy = (gyr_in->y);
-    angle.pit = att_in->pit - Y_PID + (rc_in->PITCH - 1650) / RC_PIT_P + (*pit_just - 10); //
+    angle.pit = att_in->pit - Y_PID + (rc_in->PITCH - 1500) / RC_PIT_P + RuiSaPit; // + (*pit_just - 10); //
 
     Out_PID_Y = PID_PIT.P * angle.pit;
 //-------------------内环-----------------------------------
-
-    PID_PIT.OUT = (Angle_gy * 3.5 + Out_PID_Y) * IN_POP + (Angle_gy - LAST_Angle_gy) * IN_POD;
+    pit_i += angle.pit; //积分
+    if (pit_i > INTEGRAL_WINDUP_P)
+        pit_i = INTEGRAL_WINDUP_P;
+    else if (pit_i < -INTEGRAL_WINDUP_P)
+        pit_i = -INTEGRAL_WINDUP_P;
+    PID_PIT.iout = (*IN_POI) * pit_i;
+    PID_PIT.OUT = (Angle_gy * 3.5 + Out_PID_Y) * (*IN_POP) + (Angle_gy - LAST_Angle_gy) * (*IN_POD) + PID_PIT.iout;
 
 
     LAST_Angle_gy = Angle_gy;
@@ -186,13 +199,8 @@ void Pit_Control(void)
     if (PID_PIT.OUT < -400) {PID_PIT.OUT = -400;}
 //--------------------------------------------------------------
 //    angle.pit = att_in->pit; //+(*pit_just - 10);//+ (rc_in->PITCH - 1413) / RC_PIT_P
-//    pit_i += angle.pit; //积分
-//    if (pit_i > INTEGRAL_WINDUP_P)
-//        pit_i = INTEGRAL_WINDUP_P;
-//    else if (pit_i < -INTEGRAL_WINDUP_P)
-//        pit_i = -INTEGRAL_WINDUP_P;
+
 //      PID_PIT.pout = PID_PIT.P * angle.pit;
-//    PID_PIT.iout = PID_PIT.I * pit_i;
 //    PID_PIT.dout = PID_PIT.D * gyr_in->y;
 //    PID_PIT.OUT = PID_PIT.pout + PID_PIT.iout + PID_PIT.dout;
 }
@@ -206,14 +214,46 @@ void Balance(T_float_angle *att_in, S_INT16_XYZ *gyr_in, S_INT16_XYZ *acc_in, T_
 {
     extern u16 Alt_ultrasonic;
     Balance_Data(att_in, gyr_in, acc_in, Rc_in, Ctl);//赋值
-    Throttle_IN = rc_in->THROTTLE - RC_FUN_ZERO;
+    Throttle_IN = rc_in->THROTTLE - RC_FUN_ZERO + RuiSaThr;
     Balance_Throttle = Throttle_OUT = Throttle_IN;
     u32 ALT_Set = 750 ; // (rc_in->AUX2 - 1100);//定高
 
     Yaw_Control();
     Rol_Control();
     Pit_Control();
+
+    {
+        extern float   *O_POP , *O_POI, *O_POD;
+        extern float   *O_ROP , *O_ROI, *O_ROD;
+        static float LastAttPit = 0;
+        static float LastAttRol = 0;
+
+
+        static int time = 0;
+        extern float *runtime;
+        if (0 == time)
+        {
+            time++; if (time++ > (int)(*runtime))time = 0;
+            PID_PIT.OUT = PID_PIT.OUT + (att_in->pit - LastAttPit) * (1000 - *O_POP);
+            LastAttPit = att_in->pit;
+
+            PID_ROL.OUT = PID_ROL.OUT + (att_in->rol - LastAttRol) * (1000 - *O_ROP);
+            LastAttRol = att_in->rol;
+        }
+    }
+
     ALT_Control(ALT_Set);
+
+    {
+        int PidAltSum = 0;
+        static int PidAltArrayNowPoint = 0;
+        if (PidAltArrayNowPoint++ >= 100)PidAltArrayNowPoint = 0;
+        PidAltArray[PidAltArrayNowPoint] = PID_ALT.OUT;
+        for (int i = 0; i < 100; i++)
+            PidAltSum += PidAltArray[i];
+        PID_ALT.OUT = PidAltSum / 100;
+    }
+
 
     if (0 == ctl->ALT_ON_OFF)
     {
@@ -230,9 +270,7 @@ void Balance(T_float_angle *att_in, S_INT16_XYZ *gyr_in, S_INT16_XYZ *acc_in, T_
         }
         else if (i > 1000)
         {
-
             Throttle_OUT += Balance_Throttle1;
-
         }
         else if (i <= 0)
         {
@@ -262,7 +300,7 @@ void Balance(T_float_angle *att_in, S_INT16_XYZ *gyr_in, S_INT16_XYZ *acc_in, T_
     //
 
 
-    if (rc_in->THROTTLE > RC_FUN_MIN && ctl->ARMED && att_in->pit < 40 && att_in->rol < 40 && att_in->pit > -40 && att_in->rol > -40)
+    if (ctl->ARMED && att_in->pit < 40 && att_in->rol < 40 && att_in->pit > -40 && att_in->rol > -40)
     {
         MOTO1_PWM = (int32_t)((int)Throttle_OUT + PID_ROL.OUT + PID_PIT.OUT - PID_YAW.OUT); //
         MOTO2_PWM = (int32_t)((int)Throttle_OUT - PID_ROL.OUT + PID_PIT.OUT + PID_YAW.OUT);
@@ -270,7 +308,7 @@ void Balance(T_float_angle *att_in, S_INT16_XYZ *gyr_in, S_INT16_XYZ *acc_in, T_
         MOTO4_PWM = (int32_t)((int)Throttle_OUT + PID_ROL.OUT - PID_PIT.OUT + PID_YAW.OUT);
     }
     else
-    {   att_in->yaw = 0;
+    {   //att_in->yaw = 0;
         pit_i = 0;
         rol_i = 0;
         yaw_i = 0;

@@ -46,6 +46,11 @@ void USART3_IRQHandler(void)  //??????
     //ATK_Usart3_IQR()
     SYS_UART_IQR(USART3);
 }
+void USART1_IRQHandler(void)  //??????
+{
+    //ATK_Usart3_IQR()
+    SYS_UART_IQR(USART1);
+}
 //void I2C1_EV_IRQHandler(void)
 //{
 //	I2C1_EV_IRQ();
@@ -153,6 +158,7 @@ void USBWakeUp_IRQHandler(void)
 {
 }
 #include "sys_os.h"
+extern int task_control(void);
 
 #ifdef OS_CRITICAL_METHOD   //??OS_CRITICAL_METHOD???,????ucosII?.
 //systick??????,??ucos???
@@ -171,6 +177,7 @@ void SysTick_Handler(void)
     //     mytime = 0;
     // }
     UpdateTimers();
+	  RunTask(task_control, 0);
     //RunTask(task5, 5); //??0?????????????,??:task0????????<0.5? ticket
 }
 #endif

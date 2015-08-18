@@ -7,6 +7,7 @@ T_float_angle   Att_Angle_Avg;
 int task_fast(void)//500hz
 {
     extern S_INT16_XYZ Acc, Average_Acc, Gyr, Mag;
+	extern float *runtime;
     _SS
     while (1)
     {
@@ -17,7 +18,6 @@ int task_fast(void)//500hz
             Prepare_Data2(&Att_Angle);//24us≈∑¿≠Ω«¬À≤®
             //        //Control(&Att_Angle, &Gyr, &Rc_D, &RC_Control);//17us
             Balance(&Att_Angle, &Gyr, &Acc, &Rc_D, &RC_Control); //17usPIDÀ„∑®
-
         }
     }
     _EE
